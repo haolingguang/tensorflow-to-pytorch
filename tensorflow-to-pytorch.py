@@ -22,7 +22,7 @@ def read_ckpt(ckpt):
     return pyweights
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Converts ckpt weights to deepdish hdf5")
-    parser.add_argument("--infile", type=str, default='project/models/models/adv_inception_v3_rename.ckpt',
+    parser.add_argument("--infile", type=str, default='./models/adv_inception_v3_rename.ckpt',
                         help="Path to the ckpt.")  # ***model.ckpt-22177***
     # parser.add_argument("outfile", type=str, nargs='?', default='',
                         # help="Output file (inferred if missing).")
