@@ -1,10 +1,14 @@
+import sys
+print(sys.path)
+import torch
+
 import tensorflow as tf
 import deepdish as dd
 import argparse
 import os
 import numpy as np
-import torch
 from torchvision import models
+import pretrainedmodels
 
 def tr(v):
     # tensorflow weights to pytorch weights
@@ -21,11 +25,11 @@ def read_ckpt(ckpt):
     pyweights = {k: tr(v) for (k, v) in weights.items()}
     return pyweights
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description="Converts ckpt weights to deepdish hdf5")
-    parser.add_argument("--infile", type=str, default='./models/adv_inception_v3_rename.ckpt',
-                        help="Path to the ckpt.")  # ***model.ckpt-22177***
-    # parser.add_argument("outfile", type=str, nargs='?', default='',
-                        # help="Output file (inferred if missing).")
+    parser = argparse.ArgumentParser(description="Converts tensorflow pretrained models to pytorch's")
+    parser.add_argument("--infile", type=str, default=
+                        'models/models/ens_adv_inception_resnet_v2_rename.ckpt.index',
+                 help="Path to the ckpt.")  # ***model.ckpt-22177***
+    # parser.add_argument("--outfile", type=str, nargs='?', default='',help="Output file (inferred if missing).")
     args = parser.parse_args()
     # if args.outfile == '':
     #     args.outfile = os.path.splitext(args.infile)[0] + '.h5'
@@ -34,13 +38,22 @@ if __name__ == '__main__':
     #     os.makedirs(outdir)
     weights = read_ckpt(args.infile)
     # dd.io.save(args.outfile, weights)
-    # pretarined_dict = dd.io.load('/models.h5')
-    net= models.inception_v3(pretrained=True)
+
+    # net = models.inception_v3(pretrained=True)
+    net = pretrainedmodels.__dict__['inceptionresnetv2'](num_classes=1000, pretrained='imagenet')
+    print(net)
     model_dict = net.state_dict()
-    new_pre_dict ={}
+    #先将参数值numpy转换为tensor形式
+    # pretrained_dict = dd.io.load('project/models/models/adv_inception_v3_rename.ckpt.h5')
+    new_pre_dict = {}
     for k,v in weights.items():
-        new_pre_dict[k] =torch.Tensor(v)
+        new_pre_dict[k] = torch.Tensor(v)
+    #更新
     model_dict.update(new_pre_dict)
+    #加载
     net.load_state_dict(model_dict)
-    torch.save(net,'./Models/adv_inception_v3.pth')
+    # print("1")
+    torch.save(net.state_dict(),'models/Models/ens4_adv_inception_resnet_v2.pth')
+
+
 
