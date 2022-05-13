@@ -27,7 +27,7 @@ def read_ckpt(ckpt):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Converts tensorflow pretrained models to pytorch's")
     parser.add_argument("--infile", type=str, default=
-                        'models/models/ens_adv_inception_resnet_v2_rename.ckpt.index',
+                        'models/models/ens_adv_inception_resnet_v2_rename.ckpt',
                  help="Path to the ckpt.")  # ***model.ckpt-22177***
     # parser.add_argument("--outfile", type=str, nargs='?', default='',help="Output file (inferred if missing).")
     args = parser.parse_args()
